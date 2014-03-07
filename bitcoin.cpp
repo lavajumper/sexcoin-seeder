@@ -141,6 +141,15 @@ class CNode {
         CAddress &addr = *it;
 //        printf("%s: got address %s\n", ToString(you).c_str(), addr.ToString().c_str(), (int)(vAddr->size()));
         it++;
+
+        // Until Sexcoin's unique magic number is use (after block 680000),
+        // do not consider addresses received for nodes running on a
+        // non-default port.
+        // This eliminates >90% of the nodes showing up in the db, but they
+        // were for other coins anyway.
+        // Remove this and rebuild after block 680000
+        if (addr.GetPort() != 9560 ) continue;
+
         if (addr.nTime <= 100000000 || addr.nTime > now + 600)
           addr.nTime = now - 5 * 86400;
         if (addr.nTime > now - 604800)

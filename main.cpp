@@ -342,7 +342,7 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"spum.co", "dnsseed.sxcseed.com", "dnsseed.sexcoin.us", ""};
+static const string mainnet_seeds[] = {"spum.co", "46.39.246.24", "68.52.140.186", "84.253.217.35", "67.191.160.195", "223.27.19.38", "74.122.234.52", ""};
 static const string testnet_seeds[] = {"testnet.sxcseed.com", ""};
 static const string *seeds = mainnet_seeds;
 

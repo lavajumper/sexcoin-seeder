@@ -19,9 +19,14 @@ ARECORD=dnsseed.sxcseed.com
 # The name you can ping this server by
 HOSTNAME=myhost.mydomain.com
 
+# User to run as
+#USER=seeder
+USER=root
+
 # PORT to listen on
 # Must run as root to use 53 (or <1024)
-PORT=5353
+#PORT=5353
+PORT=53
 
 # Dir to run in
 DIR=/var/sexcoin-seeder
@@ -51,6 +56,7 @@ check_work_dir() {
    #make working dir if not exist
    if [ ! -d "$DIR" ] ; then
       mkdir "$DIR"
+      chown $USER.$USER "$DIR"
    fi
    [ -d "$DIR" ] || (echo "$DIR does not exist" && exit 1)
    cd "$DIR"
@@ -73,10 +79,9 @@ stop() {
 start() {
    [ -x "$BIN" ] || (echo "$BIN not found" && exit 1)
    cd "$DIR"
-   $BIN -h $ARECORD -n $HOSTNAME \
+   su $USER -c "$BIN -h $ARECORD -n $HOSTNAME \
                        -m $SOACONTACT -p $PORT \
-                       </dev/null >/dev/null 2>&1 &
-   echo $! > "$PIDFILE"
+                       </dev/null >/dev/null 2>&1 &  echo \$! > $PIDFILE"
 }
 
 
@@ -90,18 +95,21 @@ status() {
          if [ -f "$DIR/dnsseed.dump" ] ; then
             cat "$DIR/dnsseed.dump"
          else
-            echo "Running as PID=$PID but no status yet, did you just start sexcoin-seeder? Be patient."
+            echo "PID=$PID running, no status yet.Did you just start sexcoin-seeder? Patience :)"
          fi
       else
-         echo "PIDFile present, PID not running. Deleting PIDFile"
+         echo "PidFile present, PID=$PID not running. Deleting PidFile."
          rm -f "$PIDFILE"
          exit 1
       fi
    else
-      echo "No sexcoin-seeder pid file present, not running?"
+      echo -n "No sexcoin-seeder pid file present..."
       temp=`pgrep -lf '.*dnsseed .*'`
       if [ -n "$temp" ] ; then
-         echo -e "Untracked sexcoin-seeder found in process table: \n$temp"
+         echo ""
+         echo -e "untracked sexcoin-seeder in process table: \n$temp"
+      else
+         echo " not running."
       fi
    fi
 }

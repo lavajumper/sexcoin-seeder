@@ -1,0 +1,129 @@
+#!/bin/sh
+#
+#       /etc/rc.d/init.d/sexcoin-seeder
+#
+# Starts the sexcoin-seeder daemon
+#
+# chkconfig: - 90 10 
+# description: Sexcoin Seeder DNS Server
+# config: N/A
+
+# SOA Email Address
+# Use dot instead of @ sign
+SOACONTACT=johnsmith.gmail.com
+
+# Name to Serve IPs for 
+ARECORD=dnsseed.sxcseed.com
+
+# This server's actual hostname
+# The name you can ping this server by
+HOSTNAME=myhost.mydomain.com
+
+# PORT to listen on
+# Must run as root to use 53 (or <1024)
+PORT=5353
+
+# Dir to run in
+DIR=/var/sexcoin-seeder
+PIDFILE=$DIR/sexcoin-seeder.pid
+
+#Full path and executable name
+BIN=/usr/local/bin/dnsseed
+
+
+# Port Redir with iptables for running as non-root user 
+#
+# You can listen on port 5353 and have iptables redir
+# port 53 traffic to 5353 using iptables like this:
+#
+#   iptables -t nat -A PREROUTING -d MYIP -p udp --dport 53 \
+#            -j REDIRECT --to-port 5353
+#
+# On redhat/centos, in /etc/sysconfig iptables,
+# append the following:
+#
+#   *nat
+#    -A PREROUTING -d MYIP -p udp --dport 53 -j REDIRECT --to-port 5353
+#   COMMIT
+
+
+check_work_dir() {
+   #make working dir if not exist
+   if [ ! -d "$DIR" ] ; then
+      mkdir "$DIR"
+   fi
+   [ -d "$DIR" ] || (echo "$DIR does not exist" && exit 1)
+   cd "$DIR"
+}
+
+
+stop() {
+   # kill any known running sexcoin-seeder
+   if [ -f "$PIDFILE" ] ; then
+      PID=`cat "$PIDFILE"`
+      echo "Killing existing sexcoin-seeder PID=$PID"
+      if [ -n "$PID" ] ; then
+         kill $PID
+         rm -f "$PIDFILE"
+      fi
+   fi
+}
+
+
+start() {
+   [ -x "$BIN" ] || (echo "$BIN not found" && exit 1)
+   cd "$DIR"
+   $BIN -h $ARECORD -n $HOSTNAME \
+                       -m $SOACONTACT -p $PORT \
+                       </dev/null >/dev/null 2>&1 &
+   echo $! > "$PIDFILE"
+}
+
+
+status() {
+   if [ -f "$PIDFILE" ] ; then
+      PID=`cat "$PIDFILE"`
+      #check if the pid is actually running
+      kill -0 $PID 2>/dev/null
+      running=$?
+      if [ $running -eq 0 ] ; then 
+         if [ -f "$DIR/dnsseed.dump" ] ; then
+            cat "$DIR/dnsseed.dump"
+         else
+            echo "Running as PID=$PID but no status yet, did you just start sexcoin-seeder? Be patient."
+         fi
+      else
+         echo "PIDFile present, PID not running. Deleting PIDFile"
+         rm -f "$PIDFILE"
+         exit 1
+      fi
+   else
+      echo "No sexcoin-seeder pid file present, not running?"
+      temp=`pgrep -lf '.*dnsseed .*'`
+      if [ -n "$temp" ] ; then
+         echo -e "Untracked sexcoin-seeder found in process table: \n$temp"
+      fi
+   fi
+}
+
+
+case "$1" in
+  start)
+        stop
+        check_work_dir
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  status)
+        status
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|status}"
+        exit 2
+esac

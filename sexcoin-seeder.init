@@ -41,11 +41,18 @@ BIN=/usr/local/bin/dnsseed
 # You can listen on port 5353 and have iptables redir
 # port 53 traffic to 5353 using iptables like this:
 #
+#   iptables -A INPUT -m state --state NEW -m udp -p udp \
+#            --dport 5353 -j ACCEPT
 #   iptables -t nat -A PREROUTING -d MYIP -p udp --dport 53 \
 #            -j REDIRECT --to-port 5353
 #
-# On redhat/centos, in /etc/sysconfig iptables,
-# append the following:
+# On redhat/centos, in /etc/sysconfig iptables, you need
+# the following added to the filter section
+#
+#   -A INPUT -m state --state NEW -m udp -p udp --dport 5353 -j ACCEPT
+#
+# and, if there is not nat section already you need to add the following
+# AFTER the COMMIT which marks the end of the filter section
 #
 #   *nat
 #    -A PREROUTING -d MYIP -p udp --dport 53 -j REDIRECT --to-port 5353

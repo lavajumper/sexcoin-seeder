@@ -378,15 +378,15 @@ int main(int argc, char **argv) {
   if (opts.fUseTestNet) {
       printf("Using testnet.\n");
       // Sexcoin Testnet Magic for build when BlockHeight<680000
-      pchMessageStart[0] = 0xfc;
-      pchMessageStart[1] = 0xc1;
-      pchMessageStart[2] = 0xb7;
-      pchMessageStart[3] = 0xdc;
+      //pchMessageStart[0] = 0xfc;
+      //pchMessageStart[1] = 0xc1;
+      //pchMessageStart[2] = 0xb7;
+      //pchMessageStart[3] = 0xdc;
       // Sexcoin Testnet Magic for rebuild when BlockHeight>680000
-      //pchMessageStart[0] = 0xfa;
-      //pchMessageStart[1] = 0xce;
-      //pchMessageStart[2] = 0x66;
-      //pchMessageStart[3] = 0x66;
+      pchMessageStart[0] = 0xfa;
+      pchMessageStart[1] = 0xce;
+      pchMessageStart[2] = 0x69;
+      pchMessageStart[3] = 0x69;
       seeds = testnet_seeds;
       fTestNet = true;
   }

@@ -17,9 +17,9 @@
 static inline int GetRequireHeight(const bool testnet = fTestNet)
 {
     // For build with old magic at BlockHeight<680000
-    return testnet ? 0 : 155000;
+    //return testnet ? 0 : 155000;
     // For rebuild with new magic after BlockHeight>680000
-    //return testnet ? 0 : 680000;
+    return testnet ? 0 : 680000;
 }
 
 std::string static inline ToString(const CService &ip) {

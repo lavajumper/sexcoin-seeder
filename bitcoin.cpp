@@ -148,7 +148,7 @@ class CNode {
         // This eliminates >90% of the nodes showing up in the db, but they
         // were for other coins anyway.
         // Remove this and rebuild after block 680000
-        if (addr.GetPort() != 9560 ) continue;
+        //if (addr.GetPort() != 9560 ) continue;
 
         if (addr.nTime <= 100000000 || addr.nTime > now + 600)
           addr.nTime = now - 5 * 86400;

@@ -146,7 +146,7 @@ extern "C" void* ThreadCrawler(void* data) {
       res.nClientV = 0;
       res.nHeight = 0;
       res.strClientV = "";
-      bool getaddr = res.ourLastSuccess + 14400 < now;
+      bool getaddr = res.ourLastSuccess + 14400 < now; // recheck every 4 hours instead of once per week
       res.fGood = TestNode(res.service,res.nBanTime,res.nClientV,res.strClientV,res.nHeight,getaddr ? &addr : NULL);
     }
     db.ResultMany(ips);
@@ -342,8 +342,8 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"dnsseed.sexcoin.info", "dnsseed.lavajumper.com", ""};
-static const string testnet_seeds[] = {"testnet.sxcseed.com", ""};
+static const string mainnet_seeds[] = {"dnsseed.sexcoin.info", "dnsseed.lavajumper.com", "dsnseed2.sexcoin.info", "dnseed3.sexcoin.info", "lavapit.lavajumper.com", "be.sexcoin.info", ""};
+static const string testnet_seeds[] = {"testseed.sexcoin.info", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
@@ -377,12 +377,6 @@ int main(int argc, char **argv) {
   bool fDNS = true;
   if (opts.fUseTestNet) {
       printf("Using testnet.\n");
-      // Sexcoin Testnet Magic for build when BlockHeight<680000
-      //pchMessageStart[0] = 0xfc;
-      //pchMessageStart[1] = 0xc1;
-      //pchMessageStart[2] = 0xb7;
-      //pchMessageStart[3] = 0xdc;
-      // Sexcoin Testnet Magic for rebuild when BlockHeight>680000
       pchMessageStart[0] = 0xfa;
       pchMessageStart[1] = 0xce;
       pchMessageStart[2] = 0x96;

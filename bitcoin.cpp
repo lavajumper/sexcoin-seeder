@@ -139,7 +139,7 @@ class CNode {
       if (doneAfter == 0 || doneAfter > now + 1) doneAfter = now + 1;
       while (it != vAddrNew.end()) {
         CAddress &addr = *it;
-        printf("%s: got address %s\n", ToString(you).c_str(), addr.ToString().c_str(), (int)(vAddr->size()));
+        printf("%s: got address %s, %d\n", ToString(you).c_str(), addr.ToString().c_str(), (int)(vAddr->size()));
         it++;
 
         // Until Sexcoin's unique magic number is use (after block 680000),

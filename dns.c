@@ -287,7 +287,7 @@ ssize_t static dnshandle(dns_opt_t *opt, const unsigned char *inbuf, size_t insi
   unsigned char *outpos = outbuf+(inpos-inbuf);
   unsigned char *outend = outbuf + BUFLEN;
   
-  // printf("DNS: Request host='%s' type=%i class=%i\n", name, typ, cls);
+  printf("DNS: Request host='%s' type=%i class=%i\n", name, typ, cls);
   
   // calculate size of authority section
   
@@ -330,7 +330,7 @@ ssize_t static dnshandle(dns_opt_t *opt, const unsigned char *inbuf, size_t insi
          ret = write_record_a(&outpos, outend - auth_size, "", offset, CLASS_IN, opt->datattl, &addr[n]);
       else if (addr[n].v == 6)
          ret = write_record_aaaa(&outpos, outend - auth_size, "", offset, CLASS_IN, opt->datattl, &addr[n]);
-//      printf("wrote A record: %i\n", ret);
+      printf("wrote A record: %i\n", ret);
       if (!ret) {
         n++;
         outbuf[7]++;
@@ -415,7 +415,7 @@ int dnsserver(dns_opt_t *opt) {
   {
     ssize_t insize = recvmsg(listenSocket, &msg, 0);
     unsigned char *addr = (unsigned char*)&si_other.sin_addr.s_addr;
-//    printf("DNS: Request %llu from %i.%i.%i.%i:%i of %i bytes\n", (unsigned long long)(opt->nRequests), addr[0], addr[1], addr[2], addr[3], ntohs(si_other.sin_port), (int)insize);
+    printf("DNS: Request %llu from %i.%i.%i.%i:%i of %i bytes\n", (unsigned long long)(opt->nRequests), addr[0], addr[1], addr[2], addr[3], ntohs(si_other.sin_port), (int)insize);
     if (insize <= 0)
       continue;
 

@@ -146,7 +146,7 @@ extern "C" void* ThreadCrawler(void* data) {
       res.nClientV = 0;
       res.nHeight = 0;
       res.strClientV = "";
-      bool getaddr = res.ourLastSuccess + 604800 < now;
+      bool getaddr = res.ourLastSuccess + 14400 < now;
       res.fGood = TestNode(res.service,res.nBanTime,res.nClientV,res.strClientV,res.nHeight,getaddr ? &addr : NULL);
     }
     db.ResultMany(ips);
@@ -323,26 +323,26 @@ extern "C" void* ThreadStats(void*) {
     strftime(c, 256, "[%y-%m-%d %H:%M:%S]", tmp);
     CAddrDbStats stats;
     db.GetStats(stats);
-    if (first)
+    /*if (first)
     {
       first = false;
       printf("\n\n\n\x1b[3A");
     }
     else
       printf("\x1b[2K\x1b[u");
-    printf("\x1b[s");
+    printf("\x1b[s");*/
     uint64_t requests = 0;
     uint64_t queries = 0;
     for (unsigned int i=0; i<dnsThread.size(); i++) {
       requests += dnsThread[i]->dns_opt.nRequests;
       queries += dnsThread[i]->dbQueries;
     }
-    printf("%s %i/%i available (%i tried in %is, %i new, %i active), %i banned; %llu DNS requests, %llu db queries", c, stats.nGood, stats.nAvail, stats.nTracked, stats.nAge, stats.nNew, stats.nAvail - stats.nTracked - stats.nNew, stats.nBanned, (unsigned long long)requests, (unsigned long long)queries);
+    printf("%s %i/%i available (%i tried in %is, %i new, %i active), %i banned; %llu DNS requests, %llu db queries\n", c, stats.nGood, stats.nAvail, stats.nTracked, stats.nAge, stats.nNew, stats.nAvail - stats.nTracked - stats.nNew, stats.nBanned, (unsigned long long)requests, (unsigned long long)queries);
     Sleep(1000);
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"spum.co", "us-central.sxcseed.com", "46.39.246.24", "68.52.140.186", "84.253.217.35", "67.191.160.195", "223.27.19.38", "192.99.34.177", ""};
+static const string mainnet_seeds[] = {"dnsseed.sexcoin.info", "dnsseed.lavajumper.com", ""};
 static const string testnet_seeds[] = {"testnet.sxcseed.com", ""};
 static const string *seeds = mainnet_seeds;
 
@@ -385,7 +385,7 @@ int main(int argc, char **argv) {
       // Sexcoin Testnet Magic for rebuild when BlockHeight>680000
       pchMessageStart[0] = 0xfa;
       pchMessageStart[1] = 0xce;
-      pchMessageStart[2] = 0x69;
+      pchMessageStart[2] = 0x96;
       pchMessageStart[3] = 0x69;
       seeds = testnet_seeds;
       fTestNet = true;

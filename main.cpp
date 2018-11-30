@@ -31,7 +31,7 @@ public:
   CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false) {}
 
   void ParseCommandLine(int argc, char **argv) {
-    static const char *help = "Sexcoin-seeder\n"
+    static const char *help = "Sexcoin-seeder v0.02\n"
                               "Usage: %s -h <host> -n <ns> [-m <mbox>] [-t <threads>] [-p <port>]\n"
                               "\n"
                               "Options:\n"
@@ -342,7 +342,7 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"dnsseed.sexcoin.info", "dnsseed.lavajumper.com", "dsnseed2.sexcoin.info", "dnseed3.sexcoin.info", "lavapit.lavajumper.com", "be.sexcoin.info", ""};
+static const string mainnet_seeds[] = {"dnsseed.sexcoin.info", "dnsseed.lavajumper.com", "dnsseed2.sexcoin.info", "dnsseed3.sexcoin.info", "lavapit.lavajumper.com", "be.sexcoin.info", ""};
 static const string testnet_seeds[] = {"testseed.sexcoin.info", ""};
 static const string *seeds = mainnet_seeds;
 

@@ -4,6 +4,7 @@
 #include "netbase.h"
 #include "protocol.h"
 #include "serialize.h"
+#include "version.h"
 #include "uint256.h"
 
 #define BITCOIN_SEED_NONCE  0x0539a019ca550825
@@ -80,7 +81,7 @@ class CNode {
     CAddress me(CService("0.0.0.0"));
     BeginMessage("version");
     int nBestHeight = GetRequireHeight();
-    string ver = "/sexcoin-seeder:0.01/";
+    string ver = seed_subver;
     vSend << PROTOCOL_VERSION << nLocalServices << nTime << you << me << nLocalNonce << ver << nBestHeight;
     EndMessage();
   }

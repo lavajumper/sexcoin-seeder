@@ -143,14 +143,6 @@ class CNode {
         printf("%s: got address %s, %d\n", ToString(you).c_str(), addr.ToString().c_str(), (int)(vAddr->size()));
         it++;
 
-        // Until Sexcoin's unique magic number is use (after block 680000),
-        // do not consider addresses received for nodes running on a
-        // non-default port.
-        // This eliminates >90% of the nodes showing up in the db, but they
-        // were for other coins anyway.
-        // Remove this and rebuild after block 680000
-        //if (addr.GetPort() != 9560 ) continue;
-
         if (addr.nTime <= 100000000 || addr.nTime > now + 600)
           addr.nTime = now - 5 * 86400;
         if (addr.nTime > now - 604800)
@@ -222,7 +214,10 @@ public:
   }
   bool Run() {
     bool res = true;
-    if (!ConnectSocket(you, sock)) return false;
+    if (!ConnectSocket(you, sock)) {
+        printf("%s: BAD (no connection)\n", ToString(you).c_str());
+        return false;
+    }
     PushVersion();
     Send();
     int64 now;
@@ -302,7 +297,7 @@ bool TestNode(const CService &cip, int &ban, int &clientV, std::string &clientSV
     clientV = node.GetClientVersion();
     clientSV = node.GetClientSubVersion();
     blocks = node.GetStartingHeight();
-   printf("    %s: %s!!!\n", cip.ToString().c_str(), ret ? "GOOD" : "BAD");
+    printf("    NodeTest: %s: %s!!! V-%s S-%s B-%i\n", cip.ToString().c_str(), ret ? "GOOD" : "BAD", clientV,clientSV,blocks);
     return ret;
   } catch(std::ios_base::failure& e) {
     ban = 0;

@@ -12,14 +12,14 @@
 
 #define MIN_RETRY 1000
 
-#define REQUIRE_VERSION 60703 // network protocol version
+#define REQUIRE_VERSION 70015 // network protocol version
 
 static inline int GetRequireHeight(const bool testnet = fTestNet)
 {
     // For build with old magic at BlockHeight<680000
     //return testnet ? 0 : 155000;
     // For rebuild with new magic after BlockHeight>680000
-    return testnet ? 0 : 680000;
+    return testnet ? 0 : 3080709;
 }
 
 std::string static inline ToString(const CService &ip) {
@@ -122,7 +122,7 @@ public:
   }
   int GetBanTime() const {
     if (IsGood()) return 0;
-    if (clientVersion && clientVersion < 60011 ) { return 604800; }
+    if (clientVersion && clientVersion < 70014 ) { return 604800; }
     if (stat1M.reliability - stat1M.weight + 1.0 < 0.15 && stat1M.count > 32) { return 30*86400; }
     if (stat1W.reliability - stat1W.weight + 1.0 < 0.10 && stat1W.count > 16) { return 7*86400; }
     if (stat1D.reliability - stat1D.weight + 1.0 < 0.05 && stat1D.count > 8) { return 1*86400; }

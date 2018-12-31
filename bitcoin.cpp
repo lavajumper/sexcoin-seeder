@@ -297,7 +297,8 @@ bool TestNode(const CService &cip, int &ban, int &clientV, std::string &clientSV
     clientV = node.GetClientVersion();
     clientSV = node.GetClientSubVersion();
     blocks = node.GetStartingHeight();
-    printf("    NodeTest: %s: %s!!! V-%i S-%s B-%i\n", cip.ToString().c_str(), ret ? "GOOD" : "BAD", clientV,clientSV,blocks);
+    printf("    NodeTest: %s: %s!!! V-%i S-%s B-%i\n", cip.ToString().c_str(), ret ? "GOOD" : "BAD", clientV,
+        clientSV.c_str(),blocks);
     return ret;
   } catch(std::ios_base::failure& e) {
     ban = 0;
